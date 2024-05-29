@@ -1,21 +1,23 @@
-name: noCache
+name: Go Build and Test
 
 on:
-  workflow_dispatch
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker-compose build
+      - name: Build
+        run: go build -o myapp .
+
+      - name: Test
+        run: go test ./...
