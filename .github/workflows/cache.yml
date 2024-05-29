@@ -1,4 +1,4 @@
-name: CI cache advance
+name: go-cache
 
 on: workflow_dispatch
 
