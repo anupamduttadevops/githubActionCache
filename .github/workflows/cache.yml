@@ -1,4 +1,4 @@
-name: Build
+name: go-cache
 
 on:
     workflow_dispatch
