@@ -27,7 +27,8 @@ import (
 	_ "github.com/jessevdk/go-flags"
 	_ "github.com/jinzhu/gorm"
 	_ "github.com/joho/godotenv"
-	_ "github.com/kataras/iris"
+
+	// _ "github.com/kataras/iris"
 	_ "github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
 	_ "github.com/minio/minio-go"
