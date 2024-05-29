@@ -1,29 +1,31 @@
-name: go-cache
+name: CI cache advance
 
-on:
-    workflow_dispatch
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on: workflow_dispatch
 
 jobs:
-  build:
+  ci:
+    name: Running CI
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3.0.2
 
-    - name: Cache Go modules
-      uses: actions/cache@v2
-      with:
-        path: /go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}
-        restore-keys: |
-         ${{ runner.os }}-go-
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        id: go-modules
+        with:
+          path: go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum', '**/go.mod') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-    - name: Build Docker image
-      run: docker-compose build
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.22.3
+
+      - name: Build
+        run: go build -o myapp .
+
+      - name: Test
+        run: go test ./...
