@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	_ "github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
