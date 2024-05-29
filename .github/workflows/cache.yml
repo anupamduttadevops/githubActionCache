@@ -1,27 +1,42 @@
-- id: go-cache-paths
-  run: |
-    echo "::set-output name=go-build::$(go env GOCACHE)"
-    echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+name: GoCache
 
-- name: Checkout
-  uses: actions/checkout@v2
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-# Cache go build cache, used to speedup go test
-- name: Go Build Cache
-  uses: actions/cache@v2
-  with:
-    path: ${{ steps.go-cache-paths.outputs.go-build }}
-    key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-# Cache go mod cache, used to speedup builds
-- name: Go Mod Cache
-  uses: actions/cache@v2
-  with:
-    path: ${{ steps.go-cache-paths.outputs.go-mod }}
-    key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-- name: Build
-  run: go build -o myapp .
+      - id: go-cache-paths
+        run: |
+          echo "::set-output name=go-build::$(go env GOCACHE)"
+          echo "::set-output name=go-mod::$(go env GOMODCACHE)"
 
-- name: Test
-  run: go test ./...
+      # Cache go build cache, used to speedup go test
+      - name: Go Build Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+
+      # Cache go mod cache, used to speedup builds
+      - name: Go Mod Cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+
+      - name: Build
+        run: go build -o myapp .
+
+      - name: Test
+        run: go test ./...
