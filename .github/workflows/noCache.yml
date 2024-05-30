@@ -1,4 +1,4 @@
-name: NoCache
+name: GoNoCache
 
 on:
   workflow_dispatch
